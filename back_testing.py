@@ -11,10 +11,10 @@ class BackTesting():
     def load_data():
         df = pd.read_csv("tickersS&P.csv")
         for i in df['Symbol']:
-            req = rq.get("https://api.tdameritrade.com/v1/marketdata/{i}/pricehistory",{
+            req = rq.get("https://api.tdameritrade.com/v1/marketdata/" +i+"/pricehistory",{
                 "apikey":get_consumer_key()
             })
-            print(req)
+            print(req.text)
     def parse_data():
         payload=pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
         df = payload[0]
