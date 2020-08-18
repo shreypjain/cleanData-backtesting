@@ -2,19 +2,24 @@ import yfinance as yf
 import back_testing
 import pandas as pd
 import requests as rq
-from config import get_access_token, get_refresh_token,get_consumer_key
+from config import get_access_token, get_consumer_key, get_db_name, get_password, get_refresh_token, get_username
 import mysql.connector
+import pymongo
 
 class BackTesting():
     def main(self):
         return "nothing yet"
     def load_data():
         df = pd.read_csv("tickersS&P.csv")
+        db = create_connection()
         for i in df['Symbol']:
-            req = rq.get("https://api.tdameritrade.com/v1/marketdata/" +i+"/pricehistory",{
+            response = rq.get("https://api.tdameritrade.com/v1/marketdata/" +i+"/pricehistory",{
                 "apikey":get_consumer_key()
-            })
-            print(req.text)
+            });
+            db.insert(response)
+        #return "success"
+
+
     def parse_data():
         payload=pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
         df = payload[0]
@@ -22,5 +27,10 @@ class BackTesting():
 
     def cleanse_data(self):
         print("cleansing data")
+
+def create_connection():
+    cluster = pymongo.MongoClient('mongodb+srv://'+get_username()+':'+get_password()+'@cluster0.mfsww.mongodb.net/'+get_db_name()+'?retryWrites=true&w=majority')
+    db = cluster['tradeCandleSticks']
+    return db
 
 BackTesting.load_data()
