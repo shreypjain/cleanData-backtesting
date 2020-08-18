@@ -13,7 +13,7 @@ class BackTesting():
         df = pd.read_csv("tickersS&P.csv")
         db = create_connection()
         for i in df['Symbol']:
-            response = rq.get("https://api.tdameritrade.com/v1/marketdata/" +i+"/pricehistory",{
+            response = rq.get("https://api.tdameritrade.com/v1/marketdata/"+i+"/pricehistory",{
                 "apikey":get_consumer_key()
             });
             response_data = response.json()
