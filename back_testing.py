@@ -3,8 +3,8 @@ import back_testing
 import pandas as pd
 import requests as rq
 from config import get_access_token, get_consumer_key, get_db_name, get_password, get_refresh_token, get_username
-import mysql.connector
-import pymongo
+import asyncio
+from pymongo import MongoClient
 
 class BackTesting():
     def main(self):
@@ -16,11 +16,18 @@ class BackTesting():
             response = rq.get("https://api.tdameritrade.com/v1/marketdata/" +i+"/pricehistory",{
                 "apikey":get_consumer_key()
             });
-            db.insert(response)
-        #return "success"
+            response_data = response.json()
+            db.replace_one({
+                "ticker":i
+            },
+            {
+                "ticker":i,
+                "candlesticks": response_data
+                })
+        return "success"
 
 
-    def parse_data():
+    def parse_tickers():
         payload=pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
         df = payload[0]
         df.to_csv('tickersS&P.csv',columns=['Symbol'])
@@ -29,8 +36,9 @@ class BackTesting():
         print("cleansing data")
 
 def create_connection():
-    cluster = pymongo.MongoClient('mongodb+srv://'+get_username()+':'+get_password()+'@cluster0.mfsww.mongodb.net/'+get_db_name()+'?retryWrites=true&w=majority')
-    db = cluster['tradeCandleSticks']
-    return db
+    cluster = MongoClient('mongodb+srv://'+get_username()+':'+get_password()+'@cluster0.mfsww.mongodb.net/'+get_db_name()+'?retryWrites=true&w=majority')
+    db = cluster.CleanData
+    col = db.tradeCandlesticks
+    return col
 
 BackTesting.load_data()
