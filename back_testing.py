@@ -2,6 +2,7 @@ import yfinance as yf
 import back_testing
 import pandas as pd
 import requests as rq
+import datetime as dt
 from config import get_access_token, get_consumer_key, get_db_name, get_password, get_refresh_token, get_username
 from pymongo import MongoClient
 
@@ -12,10 +13,9 @@ class BackTesting():
         df = pd.read_csv("tickersS&P.csv")
         db = create_connection()
         for i in df['Symbol']:
-            yf.
             response = rq.get("https://api.tdameritrade.com/v1/marketdata/"+i+"/pricehistory",{
                 "apikey":get_consumer_key(),
-                "startDate":
+                "startDate":159803469661
             });
             response_data = response.json()
             db.replace_one({
