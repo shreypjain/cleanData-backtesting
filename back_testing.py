@@ -3,7 +3,6 @@ import back_testing
 import pandas as pd
 import requests as rq
 from config import get_access_token, get_consumer_key, get_db_name, get_password, get_refresh_token, get_username
-import asyncio
 from pymongo import MongoClient
 
 class BackTesting():
@@ -13,8 +12,10 @@ class BackTesting():
         df = pd.read_csv("tickersS&P.csv")
         db = create_connection()
         for i in df['Symbol']:
+            yf.
             response = rq.get("https://api.tdameritrade.com/v1/marketdata/"+i+"/pricehistory",{
-                "apikey":get_consumer_key()
+                "apikey":get_consumer_key(),
+                "startDate":
             });
             response_data = response.json()
             db.replace_one({
