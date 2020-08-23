@@ -1,4 +1,3 @@
-import yfinance as yf
 import back_testing
 import pandas as pd
 import requests as rq
@@ -33,8 +32,11 @@ class BackTesting():
         df = payload[0]
         df.to_csv('tickersS&P.csv',columns=['Symbol'])
 
-    def cleanse_data(self):
+    def normalize_data(self):
         print("cleansing data")
+
+    def back_testing():
+        print('nothing')
 
 def create_connection():
     cluster = MongoClient('mongodb+srv://'+get_username()+':'+get_password()+'@cluster0.mfsww.mongodb.net/'+get_db_name()+'?retryWrites=true&w=majority')
@@ -42,4 +44,6 @@ def create_connection():
     col = db.tradeCandlesticks
     return col
 
-BackTesting.load_data()
+
+if __name__ == "__main__":
+    BackTesting.load_data()
